@@ -1,0 +1,30 @@
+{
+    "name": "vanillaJSKitty",
+    "version": "1.0.0",
+    "description": "Vanilla JS로 고양이 사진 검색하는 Application 만들기",
+    "main": "index.js",
+    "scripts": {
+        "build": "babel src -d dist -w",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "lint": "eslint src/**/*.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hanameee/vanillaJSKitty.git"
+    },
+    "keywords": [],
+    "author": "hannahbanana",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/hanameee/vanillaJSKitty/issues"
+    },
+    "homepage": "https://github.com/hanameee/vanillaJSKitty#readme",
+    "dependencies": {},
+    "devDependencies": {
+        "@babel/cli": "^7.8.4",
+        "@babel/core": "^7.9.6",
+        "@babel/polyfill": "^7.8.7",
+        "@babel/preset-env": "^7.9.6",
+        "eslint": "^7.0.0"
+    }
+}
