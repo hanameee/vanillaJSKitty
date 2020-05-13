@@ -22,8 +22,12 @@ export default class CardModal {
 
     render() {
         const { url } = this.data;
-        const { name, origin, temperament } = this.data.breeds[0];
-        const { imperial, metric } = this.data.breeds[0].weight;
+        const { name, origin, temperament } = this.data.breeds[0]
+            ? this.data.breeds[0]
+            : { name: "정보없음", origin: "정보없음", temperament: "정보없음" };
+        const { imperial, metric } = this.data.breeds[0]
+            ? this.data.breeds[0].weight
+            : { imperial: "정보없음", metric: "정보없음" };
 
         const overlay = document.createElement("div");
         overlay.className = "overlay";

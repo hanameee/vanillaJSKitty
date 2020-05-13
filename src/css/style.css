@@ -30,6 +30,10 @@ body {
     align-items: center;
 }
 
+.random-btn {
+    font-size: 20px;
+    cursor: pointer;
+}
 .search-box {
     font-size: 20px;
     border: 1px solid gray;

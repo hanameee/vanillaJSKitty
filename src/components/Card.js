@@ -11,7 +11,7 @@ export default class Card {
 
     render() {
         const url = this.data.url;
-        const { name, origin } = this.data.breeds
+        const { name, origin } = this.data.breeds[0]
             ? this.data.breeds[0]
             : { name: "정보없음", origin: "정보없음" };
 

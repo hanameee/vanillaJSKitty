@@ -22,9 +22,15 @@ export default class App {
             }
         };
 
-        const onSearch = async (keyword) => {
+        const onSearch = async (keyword, isRandom) => {
             const loader = new Loader($target);
-            const response = await api.fetchCats(keyword);
+            let response = null;
+            if (isRandom) {
+                response = await api.fetchCats(keyword);
+            } else {
+                response = await api.fetchRandomCats();
+                console.log(response, "!");
+            }
             resultSection.setState(response);
             const recent = JSON.stringify(response);
             setItem("recent", recent);

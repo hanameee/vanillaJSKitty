@@ -33,6 +33,13 @@ export default class SearchSection {
         const wrapper = document.createElement("div");
         wrapper.className = "wrapper";
 
+        const randomButton = document.createElement("span");
+        randomButton.innerText = "🐱";
+        randomButton.className = "random-btn";
+        randomButton.addEventListener("click", (e) => {
+            this.onSearch(null, false);
+        });
+
         const searchBox = document.createElement("input");
         searchBox.className = "search-box";
         searchBox.autofocus = true;
@@ -47,7 +54,7 @@ export default class SearchSection {
                 kword.innerText = word;
                 kword.addEventListener("click", (e) => {
                     if (e.target.className == "keyword") {
-                        this.onSearch(word);
+                        this.onSearch(word, true);
                     } else if (e.target.className == "delete-keyword") {
                         this.removeKeyword(word);
                     }
@@ -63,7 +70,7 @@ export default class SearchSection {
         searchBox.addEventListener("keypress", (e) => {
             if (e.keyCode == 13) {
                 const keyword = searchBox.value;
-                this.onSearch(keyword);
+                this.onSearch(keyword, true);
                 this.addKeyword(keyword);
             }
         });
@@ -72,6 +79,7 @@ export default class SearchSection {
             searchBox.value = "";
         });
 
+        wrapper.appendChild(randomButton);
         wrapper.appendChild(searchBox);
         wrapper.appendChild(keywords);
         this.section.appendChild(wrapper);
