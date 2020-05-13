@@ -6,7 +6,6 @@ export default class ResultSection {
         this.section = document.createElement("section");
         this.section.className = "result-section";
         this.data = data;
-
         $target.appendChild(this.section);
         this.render();
     }

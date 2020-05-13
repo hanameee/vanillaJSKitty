@@ -21,7 +21,6 @@ export default class CardModal {
     }
 
     render() {
-        console.log(this.data);
         const { url } = this.data;
         const { name, origin, temperament } = this.data.breeds[0];
         const { imperial, metric } = this.data.breeds[0].weight;

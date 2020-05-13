@@ -7,21 +7,37 @@ import { getItem, setItem } from "./util/localStorage.js";
 export default class App {
     constructor($target) {
         let keywords = getItem("keywords");
+        let initialData = null;
         if (keywords == null) {
             keywords = [];
         } else {
             keywords = keywords.split(",");
         }
+
+        const getInitialData = async (keywords) => {
+            if (keywords != null) {
+                initialData = JSON.parse(getItem("recent"));
+            } else {
+                return null;
+            }
+        };
+
+        const onSearch = async (keyword) => {
+            const loader = new Loader($target);
+            const response = await api.fetchCats(keyword);
+            resultSection.setState(response);
+            const recent = JSON.stringify(response);
+            setItem("recent", recent);
+            loader.closeLoader();
+        };
+
         const searchSection = new SearchSection({
             $target,
-            onSearch: async (keyword) => {
-                const loader = new Loader($target);
-                const response = await api.fetchCats(keyword);
-                resultSection.setState(response);
-                loader.closeLoader();
-            },
+            onSearch,
             keywords,
         });
-        const resultSection = new ResultSection($target, null);
+
+        getInitialData(keywords);
+        const resultSection = new ResultSection($target, initialData);
     }
 }
