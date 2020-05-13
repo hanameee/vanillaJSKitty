@@ -24,6 +24,12 @@ body {
     margin: 1rem 0;
 }
 
+.search-section > .wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .search-box {
     font-size: 20px;
     border: 1px solid gray;
@@ -31,6 +37,8 @@ body {
 
 .keywords {
     margin-top: 20px;
+    display: flex;
+    flex-direction: row;
 }
 
 .keyword {
@@ -39,6 +47,16 @@ body {
     border: 1px solid yellow;
     border-radius: 5px;
     margin-left: 5px;
+    cursor: pointer;
+    width: fit-content;
+    font-size: 20px;
+}
+
+.delete-keyword {
+    font-weight: bolder;
+    color: red;
+    font-size: 5px;
+    padding: 5px;
     cursor: pointer;
 }
 

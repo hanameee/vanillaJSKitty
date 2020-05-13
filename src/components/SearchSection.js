@@ -18,6 +18,15 @@ export default class SearchSection {
             this.render();
         }
     }
+
+    removeKeyword(kword) {
+        this.keywords = this.keywords.filter((word) => {
+            return word != kword;
+        });
+        setItem("keywords", this.keywords);
+        this.render();
+    }
+
     render() {
         this.section.innerHTML = "";
 
@@ -33,13 +42,21 @@ export default class SearchSection {
         keywords.className = "keywords";
         if (this.keywords) {
             this.keywords.map((word) => {
-                const kword = document.createElement("span");
+                const kword = document.createElement("div");
                 kword.className = "keyword";
                 kword.innerText = word;
-                kword.addEventListener("click", () => {
-                    this.onSearch(word);
+                kword.addEventListener("click", (e) => {
+                    if (e.target.className == "keyword") {
+                        this.onSearch(word);
+                    } else if (e.target.className == "delete-keyword") {
+                        this.removeKeyword(word);
+                    }
                 });
+                const deleteWord = document.createElement("span");
+                deleteWord.innerText = "X";
+                deleteWord.className = "delete-keyword";
                 keywords.appendChild(kword);
+                kword.appendChild(deleteWord);
             });
         }
 
