@@ -8,14 +8,12 @@ export default class App {
         const searchSection = new SearchSection({
             $target,
             onSearch: async (keyword) => {
-                console.log("toggled!");
-                loader.toggleLoader();
+                const loader = new Loader($target);
                 const response = await api.fetchCats(keyword);
                 resultSection.setState(response);
-                loader.toggleLoader();
+                loader.closeLoader();
             },
         });
         const resultSection = new ResultSection($target, null);
-        const loader = new Loader($target);
     }
 }

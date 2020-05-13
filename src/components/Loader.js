@@ -2,15 +2,13 @@ export default class loader {
     constructor($target) {
         this.loaderWrapper = document.createElement("div");
         this.loaderWrapper.className = "loader-wrapper";
-        this.loaderWrapper.classList.add("hidden");
-
         $target.appendChild(this.loaderWrapper);
         this.render();
     }
 
-    toggleLoader() {
+    closeLoader() {
         const loaderWrapper = document.querySelector(".loader-wrapper");
-        loaderWrapper.classList.toggle("hidden");
+        loaderWrapper.remove();
     }
 
     render() {

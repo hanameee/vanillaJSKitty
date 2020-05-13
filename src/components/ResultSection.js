@@ -1,4 +1,5 @@
 import Card from "./Card.js";
+import CardModal from "./CardModal.js";
 
 export default class ResultSection {
     constructor($target, data) {
@@ -15,6 +16,10 @@ export default class ResultSection {
         this.render();
     }
 
+    findInfoById(id) {
+        return this.data.find((cat) => cat.id === id);
+    }
+
     render() {
         this.section.innerHTML = "";
         if (this.data === null) {
@@ -28,6 +33,18 @@ export default class ResultSection {
                 cardContainer.className = "card-container";
                 this.data.map((cat) => {
                     new Card(cardContainer, cat);
+                });
+                // event deligation
+                cardContainer.addEventListener("click", (e) => {
+                    const clickedCard = e.path.find(
+                        (p) => p.className == "card"
+                    );
+                    if (clickedCard) {
+                        const id = clickedCard.dataset.id;
+                        const info = this.findInfoById(id);
+                        console.log(info);
+                        const cardModal = new CardModal(info);
+                    }
                 });
                 this.section.appendChild(cardContainer);
             } else {
