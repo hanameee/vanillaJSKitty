@@ -7,12 +7,6 @@ export default class SearchSection {
         this.render();
     }
 
-    searchByKeyword(keyword) {
-        if (keyword) {
-            this.onSearch(keyword);
-        }
-    }
-
     render() {
         this.section.innerHTML = "";
 
@@ -23,10 +17,10 @@ export default class SearchSection {
         searchBox.className = "search-box";
         searchBox.placeholder = "고양이를 검색하세요";
 
-        searchBox.addEventListener("keyup", (e) => {
+        searchBox.addEventListener("keypress", (e) => {
             if (e.keyCode == 13) {
                 const keyword = searchBox.value;
-                this.searchByKeyword(keyword);
+                this.onSearch(keyword);
             }
         });
 
