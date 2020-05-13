@@ -21,11 +21,25 @@ const request = async (url) => {
 };
 
 const api = {
-    fetchImage: (keyword) => {
-        return request(`${API_ENDPOINT}/breeds/search?q=${keyword}`);
-    },
-    fetchAllImage: () => {
-        return request(`${API_ENDPOINT}/images/search?limit=10`);
+    fetchCats: async (keyword) => {
+        try {
+            const breeds = await request(
+                `${API_ENDPOINT}/breeds/search?q=${keyword}`
+            );
+            const requests = breeds.map(async (breed) => {
+                return await request(
+                    `${API_ENDPOINT}/images/search?limit=20&breed_ids=${breed.id}`
+                );
+            });
+            const responses = await Promise.all(requests);
+            const result = responses.reduce((acc, cur) => {
+                acc = acc.concat(cur);
+                return acc;
+            });
+            return result;
+        } catch (e) {
+            return e;
+        }
     },
 };
 

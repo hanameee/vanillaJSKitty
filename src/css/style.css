@@ -1,0 +1,27 @@
+* {
+    box-sizing: border-box;
+}
+
+.search-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.search-box {
+    font-size: 20px;
+    border: 1px solid gray;
+}
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-rows: repeat(6, 300px);
+    grid-gap: 1rem;
+    grid-auto-flow: dense;
+}
+
+.card-image {
+    width: 100%;
+    height: 200px;
+}

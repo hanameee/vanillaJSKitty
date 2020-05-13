@@ -259,3 +259,142 @@ ES6이 배포되기 전에는 ECMAScript에 **모듈이라는 개념**이 존재
 
 ---
 
+## 3. API 설정
+
+API는 [The CAT API](https://thecatapi.com/) 를 사용할 것입니다. 🐱
+
+### 비동기 처리 - Callback, Promise, Async/Await
+
+참고 링크1 : [[자바스크립트] 비동기 처리 1부 - Callback](https://www.daleseo.com/js-async-callback/)
+참고 링크2: [[자바스크립트] 비동기 처리 2부 - Promise](https://www.daleseo.com/js-async-promise/)
+참고 링크3: [[자바스크립트] 비동기 처리 3부 - async/await](https://www.daleseo.com/js-async-async-await/)
+
+#### Callback vs Promise
+
+Promise는 현재에는 당장 얻을 수는 없지만 가까운 미래에는 얻을 수 있는 어떤 데이터에 접근하기 위한 방법을 제공한다. 당장 얻을 수 없다는 의미는 데이터를 얻기 위해 지연이 발생하는 경우를 말하는데, 이는 I/O 나 network를 통해서 데이터를 얻는 경우에 해당한다.
+
+이런 지연이 발생하는 경우는 CPU 입장에서 엄청나게 긴 시간이기 때문에, Non-blocking 코드를 지향하는 JS에서는 비동기 처리가 필수적이다.
+
+`콜백 함수 비동기 처리 방식`
+
+```js
+// getUser은 두번째 인자로 결과값을 이용해 실행될 로직을 넘겼고, 비동기 함수인 setTimeout 함수는 1초 후에 이 콜백함수를 호출했다.
+function getUser(id, callback) {
+  setTimeout(function () {
+    console.log("Getting ID...")
+    const user = {
+      id: id,
+      name: "User" + id,
+      email: id +"@test.com",
+    }
+    callback(user)
+  }, 1000)
+}
+
+getUser(1, function(user) {
+  // 결과값을 이용해 실행될 로직
+  console.log("user:", user)
+})
+```
+
+이와 같이 콜백 함수를 이용해 비동기 처리를 해줄 때는, 비동기 함수로부터 결과값을 바로 리턴 받으려고 하지말고, 결과값을 통해 처리할 로직을 콜백 함수로 넘기는 스타일로 코딩을 해줘야 예상된 결과를 얻을 수 있다.
+
+`Promise 이용한 비동기 처리 방식`
+
+```js
+function getUser(id) {
+  // Promise 객체를 생성해 리턴한다
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      console.log("Getting ID...")
+      const user = {
+        id: id,
+        name: "User" + id,
+        email: id +"@test.com",
+      }
+      resolve(user)
+    }, 1000)
+  })
+}
+
+getUser(1).then(function (user) {
+  console.log("user:", user)
+})
+```
+
+콜백함수를 인자로 넘기는 대신, Promise 객체를 생성해 리턴했고, 호출할 때는 리턴받은 Promise 객체에 `then()` 메서드를 호출하여 결과값을 가지고 실행할 로직을 넘겨준다.
+
+콜백 함수와의 가장 큰 차이점은, 함수를 호출하면 `Promise` 타입의 결과값이 리턴되고 이 결과값을 가지고 다음 로직을 수행한다는 것!
+
+비동기 처리 코드임에도 불구하고 마치 동기처럼 코드가 읽히기에 조금 더 직관적이다.
+
+#### Promise 사용 방법
+
+실제 코딩을 할 때는 Promise를 직접 생성해서 리턴해주는 코드를 작성하기보다는, 어떤 라이브러리의 함수를 호출해서 리턴 받은 Promise 객체를 사용하는 경우가 더 많다.
+
+대표적으로 REST API를 호출할 때 사용되는 브라우저 내장 함수 `fetch()` 가 있다. `fetch()` 함수는 API의 URL을 인자로 받아, 미래 시점에 얻게 될 API 호출 결과를 Promise 객체로 리턴한다.
+
+Promise 객체의 **then()** 메소드는 결과값을 가지고 수행할 로직을 담을 콜백 함수를 인자로 받고, **catch()** 메서드는 예외 처리 로직을 담은 콜백 함수를 인자로 받는다.
+
+```js
+fetch("https://api.thecatapi.com/v1/breeds/search?limit=50").then((response) => {
+  if(response.status === 200) {
+    return response.json()
+  } else {
+    console.log(response.statusText);
+  }
+}).then(returnedData => {
+  console.log(returnedData)
+}).catch(err => {
+  console.log(err)
+})
+```
+
+#### 참고 - XMLHttpRequest vs Fetch [참고 링크](https://junhobaik.github.io/ajax-xhr-fetch/)
+
+기존 AJAX의 대표적인 API는 XMLHttpRequest 였다. ES2015 표준으로 Fetch API가 등장하면서 이제는 일반적으로 Fetch API를 통해 AJAX를 구현하게 되었다.
+
+#### Async/Await
+
+기존 Fetch API를 사용해 작성한 코드는 아래와 같다.
+Method Chaining 기법을 통해 `then()` 메서드를 호출한다.
+
+```js
+const API_ENDPOINT = "https://api.thecatapi.com/v1";
+
+const api = {
+    fetchAllImage: () => {
+        return fetch(`${API_ENDPOINT}/images/search?limit=10`).then(res => res.json());
+    },
+};
+
+export default api;
+```
+
+Promise는 디버깅, 예외 처리 (try/catch 대신 catch메서드 사용), 들여쓰기로 인한 가독성 하락 등의 문제가 있다. 이를 해결하기 위해 ES7에 나온 키워드가 바로 `async/await`.
+
+이를 async await 을 사용해 코드를 변경하면 아래와 같다.
+
+```js
+const api = {
+    fetchAllImage: async () => {
+      	const res = await fetch(`${API_ENDPOINT}/images/search?limit=10`)
+        return res.json());
+    },
+};
+```
+
+**await** 키워드는 **async** 키워드가 붙어있는 함수 내부에서만 사용할 수 있으며, 비동기 함수가 리턴하는 Promise 로부터 결과값을 추출해준다. 
+
+await 키워드를 사용하면 비동기 코드의 결과 값을 얻을 수 있을 때까지 기다리기 때문에, 일반적인 동기코드와 동일한 흐름으로 (함수 호출 후 결과값을 변수에 할당하는 식으로) 코드를 작성할 수 있어서 편리하다.
+
+또한 동기/비동기 구분 없이 try/catch로 일관되게 예외 처리를 할 수 있다.
+
+#### async await 사용 시 주의해야 할 점
+
+**async** 키워드가 붙어있는 함수를 호출하면 명시적으로 Promise 객체를 생성하여 리턴하지 않아도 **Promise 객체가 리턴**된다. 이 객체가 최종적으로 반환하는 결과값을 사용할 땐 `then()` 메서드를 이용해야하는것!
+
+하지만 만약 async 함수를 호출하는 함수 역시 async 함수 내부에 있다면, 동일한 방식으로 await 키워드를 통해 Promise가 제공하는 값에 바로 접근할 수 있다.
+
+---
+
