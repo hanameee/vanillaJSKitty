@@ -29,6 +29,19 @@ body {
     border: 1px solid gray;
 }
 
+.keywords {
+    margin-top: 20px;
+}
+
+.keyword {
+    background-color: lightyellow;
+    padding: 5px;
+    border: 1px solid yellow;
+    border-radius: 5px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
 .initial-result {
     text-align: center;
 }
