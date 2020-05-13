@@ -15,6 +15,7 @@ export default class SearchSection {
 
         const searchBox = document.createElement("input");
         searchBox.className = "search-box";
+        searchBox.autofocus = true;
         searchBox.placeholder = "고양이를 검색하세요";
 
         searchBox.addEventListener("keypress", (e) => {
@@ -22,6 +23,10 @@ export default class SearchSection {
                 const keyword = searchBox.value;
                 this.onSearch(keyword);
             }
+        });
+
+        searchBox.addEventListener("click", () => {
+            searchBox.value = "";
         });
 
         wrapper.appendChild(searchBox);

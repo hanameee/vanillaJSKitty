@@ -9,15 +9,15 @@ export default class CardModal {
         this.render();
     }
 
-    toggleModal() {
-        const modal = document.querySelector(".modal-wrapper");
-        modal.remove();
-    }
-
     setState(data) {
-        this.toggleModal();
+        this.closeModal();
         this.data = data;
         this.render();
+    }
+
+    closeModal() {
+        const modal = document.querySelector(".modal-wrapper");
+        modal.remove();
     }
 
     render() {
@@ -63,10 +63,11 @@ export default class CardModal {
         catWeight.innerText = `${imperial} (imperial) / ${metric} (metric)`;
 
         closeBtn.addEventListener("click", () => {
-            this.toggleModal();
+            this.closeModal();
         });
+
         overlay.addEventListener("click", () => {
-            this.toggleModal();
+            this.closeModal();
         });
 
         modalHeader.appendChild(modalTitle);

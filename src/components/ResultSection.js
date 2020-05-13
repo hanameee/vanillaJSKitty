@@ -20,6 +20,11 @@ export default class ResultSection {
         return this.data.find((cat) => cat.id === id);
     }
 
+    closeModal() {
+        const modal = document.querySelector(".modal-wrapper");
+        modal.remove();
+    }
+
     render() {
         this.section.innerHTML = "";
         if (this.data === null) {
@@ -42,10 +47,19 @@ export default class ResultSection {
                     if (clickedCard) {
                         const id = clickedCard.dataset.id;
                         const info = this.findInfoById(id);
-                        console.log(info);
                         const cardModal = new CardModal(info);
                     }
                 });
+
+                document.addEventListener("keydown", (e) => {
+                    if (
+                        e.key === "Escape" &&
+                        document.querySelector(".modal-wrapper")
+                    ) {
+                        this.closeModal();
+                    }
+                });
+
                 this.section.appendChild(cardContainer);
             } else {
                 const noResult = document.createElement("div");
