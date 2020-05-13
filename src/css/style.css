@@ -14,6 +14,7 @@ body {
 
 * {
     box-sizing: border-box;
+    font-family: "Nanum Gothic", sans-serif;
 }
 
 .search-section {
@@ -87,16 +88,17 @@ body {
     position: relative;
     display: flex;
     flex-direction: column;
-
-    height: 70%;
-    width: 30%;
-    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    padding: 2rem;
     background-color: var(--background);
     color: var(--text-color);
 }
 
 .modal-image {
-    height: 60%;
+    width: 100%;
+    height: 400px;
 }
 
 .modal-header {
@@ -108,6 +110,10 @@ body {
 
 .close-btn {
     cursor: pointer;
+    position: absolute;
+    font-weight: bold;
+    top: 1rem;
+    right: 1rem;
 }
 
 .overlay {
@@ -116,4 +122,14 @@ body {
 
 .modal-title {
     margin: 0;
+}
+
+@media (max-width: 650px) {
+    .modal-contents {
+        width: 100%;
+        height: 100%;
+    }
+    .modal-image {
+        width: 70%;
+    }
 }
