@@ -8,11 +8,13 @@ export default class ResultSection {
         this.data = data;
         $target.appendChild(this.section);
         this.render();
+        this.initiateObserver();
     }
 
     setState(data) {
         this.data = data;
         this.render();
+        this.initiateObserver();
     }
 
     findInfoById(id) {
@@ -22,6 +24,23 @@ export default class ResultSection {
     closeModal() {
         const modal = document.querySelector(".modal-wrapper");
         modal.remove();
+    }
+
+    initiateObserver() {
+        const options = { threshold: 0 };
+        const callback = (entries, observer) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    observer.unobserve(entry.target);
+                    entry.target.src = entry.target.dataset.src;
+                }
+            });
+        };
+        const io = new IntersectionObserver(callback, options);
+        const lazyImages = Array.from(document.getElementsByClassName("lazy"));
+        lazyImages.forEach((image) => {
+            io.observe(image);
+        });
     }
 
     render() {

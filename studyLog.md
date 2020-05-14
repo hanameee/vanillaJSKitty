@@ -193,14 +193,15 @@ CommonJS 모듈과 다르게 2가지 방법으로 내보낼 수 있다.
   export const rotate = function() {};
   ```
   
+
 named export 한 모듈을 import 할 때는 `import` 키워드와 중괄호 `{}` 를 사용하고, 반드시 `export` 문에서 정의한 모듈 이름으로 가져와야 한다.
-  
+
 ```js
   // graphics.js
   import {crop, rotate} from './filter';
   crop();
   rotate();
-  ```
+```
 
   named export의 경우 모듈을 import 할 때 **as 키워드로 별칭**을 붙일 수 있다.
 
@@ -398,3 +399,159 @@ await 키워드를 사용하면 비동기 코드의 결과 값을 얻을 수 있
 
 ---
 
+## 4. Lazy Loading 구현
+
+[출처](https://heropy.blog/2019/10/27/intersection-observer/)
+
+### intersection observer 이란?
+
+Intersection observer은 브라우저 뷰포트와 설정한 요소의 교차점을 관찰한다. 이 요소가 사용자 화면에 보이는 요소인지 아닌지를 구별하는 기능을 제공한다.
+
+비동기적으로 실행되기 때문에 scroll 같은 이벤트 기반 요소 관찰에서 발견되는 렌더링 성능이나, 이벤트 연속 호출의 문제 없이 사용할 수 있다.
+
+### intersection observer 구조
+
+`new IntersectionObserver()` 을  통해 생성한 인스턴스로 **관찰자를 초기화**하고, **관찰할 대상을 지정**한다.
+
+```js
+const io = new IntersectionObserver (callback, options); // 관찰자 초기화
+io.observe(element) // 관찰할 대상 지정
+```
+```js
+const io = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    console.log(entry)
+  })
+}, options)
+io.observe(element)
+```
+- **callback** : 관찰할 대상이 등록되거나, 가시성에 변화가 생기면 관찰자는 callback을 실행함. callback은 2개의 parameters를 가진다.
+  1. `entries` : IntersectionObserverEntry 인스턴스의 배열로, IntersectionObserverEntry는 아래와 같은 속성들을 포함한다.
+     - `boundingClientRect`: 관찰 대상의 사각형 정보([DOMRectReadOnly](https://developer.mozilla.org/en-US/docs/Web/API/DOMRectReadOnly))
+     - `intersectionRect`: 관찰 대상의 교차한 영역 정보([DOMRectReadOnly](https://developer.mozilla.org/en-US/docs/Web/API/DOMRectReadOnly))
+     - `intersectionRatio`: 관찰 대상의 교차한 영역 백분율(`intersectionRect` 영역에서 `boundingClientRect` 영역까지 비율, Number)
+     - `isIntersecting`: 관찰 대상의 교차 상태(Boolean)
+     - `rootBounds`: 지정한 루트 요소의 사각형 정보([DOMRectReadOnly](https://developer.mozilla.org/en-US/docs/Web/API/DOMRectReadOnly))
+     - `target`: 관찰 대상 요소([Element](https://developer.mozilla.org/en-US/docs/Web/API/Element))
+     - `time`: 변경이 발생한 시간 정보([DOMHighResTimeStamp](https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp))
+  2. `observer` : 콜백이 실행되는 해당 IntersectionObserver 인스턴스를 참조한다 
+
+- **options** : root, rootMargin, threshold 에 대한 설정을 할 수 있다.
+
+  - root: 타겟의 가시성을 검사하기 위해 뷰포트 대신 사용할 요소 객체를 지정할 수 있다. 타겟의 조상 요소여야 하며, 지정하지 않을 경우 브라우저 뷰포트가 기본 사용된다.
+
+    ```js
+    const io = new IntersectionObserver(callback, {
+      root: document.getElementById("my-viewport")
+    })
+    ```
+
+  - rootMargin: margin을 활용해 root 범위를 확장하거나 축소할 수 있다. css의 margin 설정과 동일하며 단위를 꼭 입력해야한다. (px 또는 %)
+
+  - threshold: 옵저버가 실행되기 위해 타겟의 가시성이 얼마나 필요한지 백분율로 표시한다. 기본 값은 [0] 이지만 Number 타입의 단일 값으로도 작성이 가능하다.
+
+    - 0 : 타겟의 가장자리 픽셀이 Root 범위를 교차하는 순간 (보이기 시작할 때) 옵저버가 실행된다.
+    - 0.3 : 타겟의 가시성이 30%일 때 옵저버가 실행된다.
+    - [0,0.3,1] : 타겟의 가시성이 0%, 30%, 100%일때 모두 옵저버가 실행된다
+
+### intersection observer 의 메서드
+
+#### observe
+
+대상 요소의 관찰을 시작한다.
+
+```js
+const io1 = new IntersectionObserver(callback, options)
+const io2 = new IntersectionObserver(callback, options)
+
+const div = document.querySelector('div')
+const li = document.querySelector('li')
+const h2 = document.querySelector('h2')
+
+io1.observe(div) // DIV 요소 관찰
+io2.observe(li) // LI 요소 관찰
+io2.observe(h2) // h2 요소 관찰
+```
+
+#### unobserve()
+
+대상 요소의 관찰을 중지한다. 
+
+```js
+io1.unobserve(div) // DIV 요소 관찰
+```
+
+콜백의 두 번째 인수 observer가 해당 IntersectionObserver를 참조하므로, 아래와 같이 작성할 수도 있다.
+
+```js
+const io = now IntersectionObserver((entries, observer) => {
+  entries.forEach(entry -> {
+    // 가시성의 변화가 있으면 관찰 대상 전체에 대한 콜백이 실행되므로, 관찰대상의 교차 상태가 false일 경우엔 실행하지 않음.
+    if (!entry.isIntersecting){
+      return
+    }
+    // 관찰 대상의 교차 상태가 true일 경우 실행할 코드들
+    // ...
+    
+    // 위 실행을 처리하고 (1회) 관찰 중지
+    observer.unobserve(entry.target)
+  })
+})
+```
+
+### 간단한 예제
+
+```js
+// 타겟의 가시성이 100%일 때 옵저버 실행
+const options = {threshold: 1.0}
+const callback = (entries, observer) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      observer.unobserve(entry.target);
+      console.log("화면에서 노출됨");
+    } else {
+      console.log('화면에서 제외됨')
+    }
+  });
+}
+const observer = new IntersectionObserver(callback, options); // IntersectionObserver 인스턴스 생성
+observer.observe(document.getElementById('id')) // 타겟 요소 추가
+```
+
+1. IntersectionObserver 객체의 인스턴스 (이 예제에서는 observer) 를 생성하면서, callback 함수와 option을 전달한다.
+2. IntersectionObserver 에서 observe할 타겟 요소 (document.getElementById) 를 추가한다.
+3. 타겟 요소가 options에서 정의한 percent 만큼 화면에 노출 혹은 제외되면 **entries 배열에 추가**하고, **callback 함수를 호출**한다.
+4. callback 함수에서 전달 받은 entries 배열을 확인하면서, isIntersecting으로 가시성 여부를 확인한다.
+5. 더 이상 Target element를 구독할 필요가 없다면, unobserve로 제거할 수 있다.
+
+### Lazy Loading에 사용 예시
+
+img의 `src` 속성에는 페이지가 처음 로드되었을 때 나타나는 placeholder 이미지가 들어가고,
+`data-src` 혹은 `data-srcset` 속성에는 타겟 요소가 가시화되었을 때 로드할 이미지가 들어간다.
+
+`html 마크업 예시`
+
+```html
+<img class="lazy" src= "empty.png" data-src="image1.png"/>
+<img class="lazy" src="empty.png" data-src="image2.png"/>
+<img class="lazy" src="empty.png" data-src="image3.png"/>
+```
+
+`js 예시`
+
+```js
+const options = {threshold: 0};
+const callback = (entries, observer) =>{
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      observer.unobserve(entry.target);
+      entry.target.src = entry.target.dataset.src;
+    }
+  })
+}
+const io = new IntersectionObserver(callback,options);
+io.observe(Array.from(document.getElementsByClassName('lazy')))
+```
+
+1. lazy className으로 등록된 element들을 모두 IntersectionObserver 구독에 추가한다.
+2. target 요소가 노출이 될 때마다, entry의 target을 가져와 src를 data
