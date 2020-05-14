@@ -29,7 +29,7 @@ export default class App {
                 response = await api.fetchCats(keyword);
             } else {
                 response = await api.fetchRandomCats();
-                console.log(response, "!");
+                console.log(response);
             }
             resultSection.setState(response);
             const recent = JSON.stringify(response);

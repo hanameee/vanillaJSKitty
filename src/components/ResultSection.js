@@ -107,9 +107,6 @@ export default class ResultSection {
                         new Card(cardContainer, cat);
                     });
                 }
-                // this.data.map((cat) => {
-                //     new Card(cardContainer, cat);
-                // });
                 // event deligation
                 cardContainer.addEventListener("click", (e) => {
                     const clickedCard = e.path.find(

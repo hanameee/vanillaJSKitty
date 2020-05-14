@@ -612,3 +612,4 @@ setState(data) {
 
 ## 5. Scroll Pagining 구현
 
+역시 intersection observer 활용해서 구현했다.
