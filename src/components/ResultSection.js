@@ -6,15 +6,16 @@ export default class ResultSection {
         this.section = document.createElement("section");
         this.section.className = "result-section";
         this.data = data;
+        this.lastIdx = 0;
         $target.appendChild(this.section);
         this.render();
-        this.initiateObserver();
+        this.lazyLoadObserver();
     }
 
     setState(data) {
         this.data = data;
         this.render();
-        this.initiateObserver();
+        this.lazyLoadObserver();
     }
 
     findInfoById(id) {
@@ -26,7 +27,7 @@ export default class ResultSection {
         modal.remove();
     }
 
-    initiateObserver() {
+    lazyLoadObserver() {
         const options = { threshold: 0 };
         const callback = (entries, observer) => {
             entries.forEach((entry) => {
@@ -43,6 +44,49 @@ export default class ResultSection {
         });
     }
 
+    setScrollPagingObserver(data, lastIdx) {
+        const options = { threshold: 0, rootMargin: "10px 0px" };
+        const callback = (entries, observer) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    const newLastIdx = this.getLastIdx(this.data, lastIdx);
+                    if (newLastIdx == lastIdx) {
+                        observer.unobserve(entry.target);
+                    } else {
+                        observer.unobserve(entry.target);
+                        const fetchData = this.data.slice(
+                            lastIdx + 1,
+                            newLastIdx + 1
+                        );
+                        lastIdx = newLastIdx;
+                        fetchData.forEach((cat) => {
+                            new Card(
+                                document.querySelector(".card-container"),
+                                cat
+                            );
+                        });
+                        observer.observe(
+                            document.querySelector(".card-container").lastChild
+                        );
+                        this.lazyLoadObserver();
+                    }
+                    entry.target.src = entry.target.dataset.src;
+                }
+            });
+        };
+        const io = new IntersectionObserver(callback, options);
+        const lastData = document.querySelector(".card-container").lastChild;
+        io.observe(lastData);
+    }
+
+    getLastIdx(data, lastIdx) {
+        if (data.length < 15 || lastIdx > data.length - 20) {
+            return data.length;
+        } else {
+            return lastIdx + 20;
+        }
+    }
+
     render() {
         this.section.innerHTML = "";
         if (this.data === null) {
@@ -54,9 +98,18 @@ export default class ResultSection {
             if (this.data.length > 0) {
                 const cardContainer = document.createElement("div");
                 cardContainer.className = "card-container";
-                this.data.map((cat) => {
-                    new Card(cardContainer, cat);
-                });
+                const lastIdx = this.getLastIdx(this.data, 0);
+                if (lastIdx != this.data.length) {
+                    const fetchData = this.data.slice(0, lastIdx + 1);
+                    fetchData.forEach((cat) => new Card(cardContainer, cat));
+                } else {
+                    this.data.forEach((cat) => {
+                        new Card(cardContainer, cat);
+                    });
+                }
+                // this.data.map((cat) => {
+                //     new Card(cardContainer, cat);
+                // });
                 // event deligation
                 cardContainer.addEventListener("click", (e) => {
                     const clickedCard = e.path.find(
@@ -79,6 +132,9 @@ export default class ResultSection {
                 });
 
                 this.section.appendChild(cardContainer);
+                if (lastIdx != this.data.length) {
+                    this.setScrollPagingObserver(this.data, lastIdx);
+                }
             } else {
                 const noResult = document.createElement("div");
                 noResult.className = "no-result";

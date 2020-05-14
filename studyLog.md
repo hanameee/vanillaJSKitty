@@ -401,7 +401,7 @@ await 키워드를 사용하면 비동기 코드의 결과 값을 얻을 수 있
 
 ## 4. Lazy Loading 구현
 
-[출처](https://heropy.blog/2019/10/27/intersection-observer/)
+[heropy 블로그 출처](https://heropy.blog/2019/10/27/intersection-observer/), [상세한 예제](https://tech.lezhin.com/2017/07/13/intersectionobserver-overview), [간단 정리]([https://medium.com/@pks2974/intersection-observer-%EA%B0%84%EB%8B%A8-%EC%A0%95%EB%A6%AC%ED%95%98%EA%B8%B0-fc24789799a3](https://medium.com/@pks2974/intersection-observer-간단-정리하기-fc24789799a3))
 
 ### intersection observer 이란?
 
@@ -524,7 +524,7 @@ observer.observe(document.getElementById('id')) // 타겟 요소 추가
 4. callback 함수에서 전달 받은 entries 배열을 확인하면서, isIntersecting으로 가시성 여부를 확인한다.
 5. 더 이상 Target element를 구독할 필요가 없다면, unobserve로 제거할 수 있다.
 
-### Lazy Loading에 사용 예시
+### Lazy Loading 사용 예시
 
 img의 `src` 속성에는 페이지가 처음 로드되었을 때 나타나는 placeholder 이미지가 들어가고,
 `data-src` 혹은 `data-srcset` 속성에는 타겟 요소가 가시화되었을 때 로드할 이미지가 들어간다.
@@ -554,4 +554,61 @@ io.observe(Array.from(document.getElementsByClassName('lazy')))
 ```
 
 1. lazy className으로 등록된 element들을 모두 IntersectionObserver 구독에 추가한다.
-2. target 요소가 노출이 될 때마다, entry의 target을 가져와 src를 data
+2. target 요소가 노출이 될 때마다, entry의 target을 가져와 src를 dataset.src 값으로 설정한 뒤 구독에서 제외한다.
+
+### 구현한 Lazy loading 코드
+
+`DOM element 만들기`
+
+```js
+const cardImage = document.createElement("img");
+cardImage.className = "card-image";
+cardImage.classList.add("lazy");
+cardImage.dataset.src = url;
+```
+
+`Intersection observer 만들기` 
+
+```js
+// ResultSection.js
+initiateObserver() {
+  const options = { threshold: 0 };
+  const callback = (entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        observer.unobserve(entry.target);
+        entry.target.src = entry.target.dataset.src;
+      }
+    });
+  };
+  const io = new IntersectionObserver(callback, options);
+  const lazyImages = Array.from(document.getElementsByClassName("lazy"));
+  lazyImages.forEach((image) => {
+    io.observe(image);
+  });
+}
+```
+
+`ResultSection.js`
+
+```js
+constructor($target, data) {
+  this.section = document.createElement("section");
+  this.section.className = "result-section";
+  this.data = data;
+  $target.appendChild(this.section);
+  this.render();
+  this.initiateObserver();
+}
+
+setState(data) {
+  this.data = data;
+  this.render();
+  this.initiateObserver(); // render 이후에 실행해줌
+}
+```
+
+---
+
+## 5. Scroll Pagining 구현
+

@@ -74,7 +74,7 @@ body {
 .card-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    grid-template-rows: repeat(6, 300px);
+    grid-template-rows: repeat(1, 300px);
     grid-gap: 1rem;
     grid-auto-flow: dense;
 }
