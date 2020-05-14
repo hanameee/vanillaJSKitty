@@ -1,6 +1,7 @@
 import SearchSection from "./components/SearchSection.js";
 import ResultSection from "./components/ResultSection.js";
 import Loader from "./components/Loader.js";
+import DarkMode from "./components/ChangeMode.js";
 import api from "./api/theCatAPI.js";
 import { getItem, setItem } from "./util/localStorage.js";
 
@@ -36,6 +37,8 @@ export default class App {
             setItem("recent", recent);
             loader.closeLoader();
         };
+
+        const darkMode = new DarkMode($target);
 
         const searchSection = new SearchSection({
             $target,

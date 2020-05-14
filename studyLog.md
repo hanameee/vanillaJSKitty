@@ -613,3 +613,42 @@ setState(data) {
 ## 5. Scroll Pagining 구현
 
 역시 intersection observer 활용해서 구현했다.
+
+
+
+----
+
+## 6. 다크 모드 구현
+
+### prefers-color-scheme
+
+`prefers-color-scheme` 으로 OS의 라이트 모드/다크 모드를 인식하고 이에 맞는 CSS를 적용할 수 있다. [출처](https://studiomeal.com/archives/1053)
+
+```css
+/* only light mode */
+@media (prefers-color-scheme: light) {
+  .dark {
+    display: none;
+  }
+}
+
+/* only dark mode */
+@media (prefers-color-scheme: dark) {
+  body {
+    color: lightgray;
+    background: black;
+  }
+  .light {
+    display: none;
+  }
+}
+```
+
+### 사용자 임의 설정
+
+사용자에게 임의로 다크 모드, 라이트 모드를 선택하게 하기위해서 localStorage에 변수 값을 저장해 활용할 수 있다.
+
+```js
+
+```
+
