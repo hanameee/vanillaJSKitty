@@ -1,6 +1,18 @@
 import Card from "./Card.js";
 import CardModal from "./CardModal.js";
 
+export const findInfoById = (data, id) => {
+    return data.find((cat) => cat.id === id);
+};
+
+export const getLastIdx = (data, lastIdx, offset) => {
+    if (data.length < offset || lastIdx > data.length - offset) {
+        return data.length;
+    } else {
+        return lastIdx + offset;
+    }
+};
+
 export default class ResultSection {
     constructor($target, data) {
         this.section = document.createElement("section");
@@ -16,10 +28,6 @@ export default class ResultSection {
         this.data = data;
         this.render();
         this.lazyLoadObserver();
-    }
-
-    findInfoById(id) {
-        return this.data.find((cat) => cat.id === id);
     }
 
     closeModal() {
@@ -49,7 +57,7 @@ export default class ResultSection {
         const callback = (entries, observer) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    const newLastIdx = this.getLastIdx(this.data, lastIdx);
+                    const newLastIdx = getLastIdx(this.data, lastIdx, 15);
                     if (newLastIdx == lastIdx) {
                         observer.unobserve(entry.target);
                     } else {
@@ -79,14 +87,6 @@ export default class ResultSection {
         io.observe(lastData);
     }
 
-    getLastIdx(data, lastIdx) {
-        if (data.length < 15 || lastIdx > data.length - 20) {
-            return data.length;
-        } else {
-            return lastIdx + 20;
-        }
-    }
-
     render() {
         this.section.innerHTML = "";
         if (this.data === null) {
@@ -98,7 +98,7 @@ export default class ResultSection {
             if (this.data.length > 0) {
                 const cardContainer = document.createElement("div");
                 cardContainer.className = "card-container";
-                const lastIdx = this.getLastIdx(this.data, 0);
+                const lastIdx = getLastIdx(this.data, 0, 15);
                 if (lastIdx != this.data.length) {
                     const fetchData = this.data.slice(0, lastIdx + 1);
                     fetchData.forEach((cat) => new Card(cardContainer, cat));
@@ -114,7 +114,7 @@ export default class ResultSection {
                     );
                     if (clickedCard) {
                         const id = clickedCard.dataset.id;
-                        const info = this.findInfoById(id);
+                        const info = findInfoById(this.data, id);
                         const cardModal = new CardModal(info);
                     }
                 });

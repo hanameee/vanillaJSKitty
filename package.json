@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "build": "babel src -d dist -w",
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "jest --config=jest.config.js",
         "lint": "eslint src/**/*.js"
     },
     "repository": {
@@ -25,6 +25,8 @@
         "@babel/core": "^7.9.6",
         "@babel/polyfill": "^7.8.7",
         "@babel/preset-env": "^7.9.6",
-        "eslint": "^7.0.0"
+        "babel-jest": "^26.0.1",
+        "eslint": "^7.0.0",
+        "jest": "^26.0.1"
     }
 }
