@@ -8,15 +8,16 @@ import { getItem, setItem } from "./util/localStorage.js";
 export default class App {
     constructor($target) {
         let keywords = getItem("keywords");
+        console.log(keywords);
         let initialData = null;
-        if (keywords == null) {
-            keywords = [];
-        } else {
+        if (keywords) {
             keywords = keywords.split(",");
+        } else {
+            keywords = [];
         }
 
         const getInitialData = async (keywords) => {
-            if (keywords != null) {
+            if (keywords) {
                 initialData = JSON.parse(getItem("recent"));
             } else {
                 return null;
