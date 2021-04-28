@@ -1,11 +1,34 @@
-# vanillaJSKitty 🐱
-Vanilla JS로 고양이 사진 검색하는 Application 만들기
+<h1 align="center">vanillaJSKitty 🐱</h1>
+<p align="center">프로그래머스 2020 Dev-Matching: 웹 프론트엔드 개발자 (상반기) 과제<br/> Vanilla JS 고양이 사진 검색기</p>
+<p align="center"><a href="https://vanilajskitty.web.app">데모 페이지</a></p>
 
----
+![thumbnail](thumbnail.png)
 
-### install
+이 레포는 **[프로그래머스 2020 Dev-Matching: 웹 프론트엔드 개발자 (상반기)](https://programmers.co.kr/competitions/131/2020-web-fe-first)** 과제를 복기한 결과물입니다.
 
-`npm install`
+라이브러리/프레임워크 없이 Vanilla JS로 고양이 사진을 검색하는 애플리케이션을 구현한 과정과, 해당 과정에서 필요한 지식들을 정리했습니다.
+
+과제의 상세 요구조건들은 아래 출처에서 참고해 복기하였습니다.
+
+- [프로그래머스 2020 Dev-Matching : 웹 프론트엔드 과제 복기](https://velog.io/@hyeon930/series/프로그래머스-2020-Dev-Matching-웹-프론트엔드-과제-복기)
+
+- [프로그래머스 웹 프론트엔드 데브 매칭 후기](https://imch.dev/posts/2020-programmers-web-frontend-dev-matching/)
+
+- [프로그래머스 2020 Dev-Matching 웹 프론트엔드 개발자(상반기) 후기](https://taeny.dev/essay/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EC%8A%A4-2020-dev-matching-%EC%9B%B9-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EA%B0%9C%EB%B0%9C%EC%9E%90(%EC%83%81%EB%B0%98%EA%B8%B0)-%ED%9B%84%EA%B8%B0/)
+
+## install
+
+
+
+```shell
+npm install # 필요한 dependency를 설치합니다.
+```
+
+
+
+## 구현 과정
+
+
 
 ---
 
@@ -23,7 +46,7 @@ ES2015+ 문법을 사용한 코드를 예전 ES5 자바스크립트 코드로 �
 
 #### 바벨 설정파일 .babelrc
 
-바벨 설정파일 `.babelrc` 을 통해 preset이나 plugin을 연결할 수 있다. preset은 여러 플러그인의 모음집니다. 다양한 preset 들이 있는데, 그 중 **env** 프리셋은 타겟 브라우저를 입력하면 알아서 사용자가 환경에 맞춰 최신 EcmaScript를 사용할 수 있게 해준다.
+바벨 설정파일 `.babelrc` 을 통해 preset이나 plugin을 연결할 수 있다. preset은 여러 플러그인의 모음집이다. 다양한 preset 들이 있는데, 그 중 **env** 프리셋은 타겟 브라우저를 입력하면 알아서 사용자가 환경에 맞춰 최신 EcmaScript를 사용할 수 있게 해준다.
 
 `.babelrc`
 
@@ -613,8 +636,6 @@ setState(data) {
 ## 5. Scroll Pagining 구현
 
 역시 intersection observer 활용해서 구현했다.
-
-
 
 ----
 
