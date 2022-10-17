@@ -1,33 +1,39 @@
 {
-    "name": "vanillaJSKitty",
-    "version": "1.0.0",
-    "description": "Vanilla JS로 고양이 사진 검색하는 Application 만들기",
-    "private": true,
-    "scripts": {
-        "test": "jest --config=jest.config.js",
-        "lint": "eslint src/**/*.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/hanameee/vanillaJSKitty.git"
-    },
-    "keywords": [],
-    "author": "hannahbanana",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/hanameee/vanillaJSKitty/issues"
-    },
-    "homepage": "https://github.com/hanameee/vanillaJSKitty#readme",
-    "devDependencies": {
-        "@babel/cli": "^7.19.3",
-        "@babel/core": "^7.19.3",
-        "@babel/polyfill": "^7.12.1",
-        "@babel/preset-env": "^7.19.4",
-        "babel-jest": "^29.2.0",
-        "css-loader": "^6.7.1",
-        "eslint": "^8.25.0",
-        "jest": "^29.2.0",
-        "mini-css-extract-plugin": "^2.6.1",
-        "style-loader": "^3.3.1"
-    }
+  "name": "vanillaJSKitty",
+  "version": "1.0.0",
+  "description": "Vanilla JS로 고양이 사진 검색하는 Application 만들기",
+  "private": true,
+  "scripts": {
+    "build": "webpack --mode=production",
+    "test": "jest --config=jest.config.js",
+    "lint": "eslint src/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanameee/vanillaJSKitty.git"
+  },
+  "keywords": [],
+  "author": "hannahbanana",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hanameee/vanillaJSKitty/issues"
+  },
+  "homepage": "https://github.com/hanameee/vanillaJSKitty#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.19.3",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.19.4",
+    "babel-jest": "^29.2.0",
+    "css-loader": "^6.7.1",
+    "eslint": "^8.25.0",
+    "html-webpack-plugin": "^5.5.0",
+    "jest": "^29.2.0",
+    "mini-css-extract-plugin": "^2.6.1",
+    "style-loader": "^3.3.1"
+  },
+  "dependencies": {
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  }
 }
