@@ -115,7 +115,7 @@ export default class ResultSection {
                     if (clickedCard) {
                         const id = clickedCard.dataset.id;
                         const info = findInfoById(this.data, id);
-                        const cardModal = new CardModal(info);
+                        new CardModal(info);
                     }
                 });
 

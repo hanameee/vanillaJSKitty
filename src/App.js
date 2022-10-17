@@ -30,17 +30,16 @@ export default class App {
                 response = await api.fetchCats(keyword);
             } else {
                 response = await api.fetchRandomCats();
-                console.log(response);
             }
+            loader.closeLoader();
             resultSection.setState(response);
             const recent = JSON.stringify(response);
             setItem("recent", recent);
-            loader.closeLoader();
         };
 
-        const darkMode = new DarkMode($target);
+        new DarkMode($target);
 
-        const searchSection = new SearchSection({
+        new SearchSection({
             $target,
             onSearch,
             keywords,

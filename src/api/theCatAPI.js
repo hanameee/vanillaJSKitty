@@ -24,22 +24,28 @@ const api = {
             const breeds = await request(
                 `${API_ENDPOINT}/breeds/search?q=${keyword}`
             );
-            const requests = breeds.map(async (breed) => {
+            const breed_detail_requests = breeds.map(async (breed) => {
                 return await request(
                     `${API_ENDPOINT}/images/search?limit=20&breed_ids=${breed.id}`
                 );
             });
-            const responses = await Promise.all(requests);
-            const result = responses.reduce((acc, cur) => {
-                acc = acc.concat(cur);
+            const breed_detail_responses = await Promise.all(breed_detail_requests);
+            const cat_ids = breed_detail_responses.reduce((acc, cur) => {
+                acc = acc.concat(cur.reduce((a,c) => a.concat(c.id),[]));
                 return acc;
             }, []);
-            return result;
+
+            const cat_details_requests = cat_ids.map(async (id) => {
+                return await request(
+                    `${API_ENDPOINT}/images/${id}`
+                )
+            })
+            const cat_details_responses = await Promise.all(cat_details_requests);
+            return cat_details_responses;
         } catch (e) {
             return e;
         }
     },
-
     fetchRandomCats: async () => {
         try {
             const result = await request(
